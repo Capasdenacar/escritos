@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mis Escritos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .escritos {
+      margin-top: 30px;
+    }
+    .escrito {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-left: 5px solid #007acc;
+    }
+    .escrito h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .escrito small {
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mis Escritos</h1>
+
+  <input type="text" id="titulo" placeholder="Título del escrito" />
+  <textarea id="contenido" placeholder="Escribe aquí tu texto..."></textarea>
+  <button onclick="guardarEscrito()">Guardar</button>
+
+  <div class="escritos" id="listaEscritos"></div>
+
+  <script>
+    // Cargar escritos anteriores si hay en localStorage
+    window.onload = function () {
+      const guardados = JSON.parse(localStorage.getItem("escritos")) || [];
+      guardados.forEach(escrito => mostrarEscrito(escrito));
+    }
+
+    function guardarEscrito() {
+      const titulo = document.getElementById("titulo").value.trim();
+      const contenido = document.getElementById("contenido").value.trim();
+      const fecha = new Date().toLocaleString();
+
+      if (!titulo || !contenido) return alert("Completa el título y el contenido");
+
+      const escrito = { titulo, contenido, fecha };
+
+      // Guardar en el navegador (localStorage)
+      let escritos = JSON.parse(localStorage.getItem("escritos")) || [];
+      escritos.unshift(escrito); // Añadir al inicio
+      localStorage.setItem("escritos", JSON.stringify(escritos));
+
+      mostrarEscrito(escrito);
+
+      // Limpiar campos
+      document.getElementById("titulo").value = "";
+      document.getElementById("contenido").value = "";
+    }
+
+    function mostrarEscrito({ titulo, contenido, fecha }) {
+      const div = document.createElement("div");
+      div.className = "escrito";
+      div.innerHTML = `<h2>${titulo}</h2><small>${fecha}</small><p>${contenido}</p>`;
+      document.getElementById("listaEscritos").prepend(div);
+    }
+  </script>
+
+</body>
+</html>
